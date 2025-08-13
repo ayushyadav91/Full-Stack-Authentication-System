@@ -1,33 +1,33 @@
-const express = require('express'); 
-const app = express();
-const connectDB = require('./db/connectdb');
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import connectDB from './db/connectdb.js';
 
-require('dotenv').config(); 
+
+dotenv.config(); // Load environment variables from .env file
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+
+// Middleware
+app.use(cors());
+app.use(express.json());  
+
+// Connect to MongoDB
 connectDB();
 
-app.use(express.json({
-  limit: '50mb'
-})); // Middleware to parse JSON requests 
+// Import routes
+import authRoutes from './routes/auth.routes.js';   
+app.use('/api/v1', authRoutes); // Use the auth routes
 
-app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded data
-// Middleware to parse URL-encoded data
-
-// Middleware to handle CORS    
-const cors = require('cors');
-app.use(cors({
-  origin: '*', // Allow all origins
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'] // Allow specific headers
-}));
-
-// Define a simple route  
-
+// Sample route
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+    res.send('Welcome to the Authentication API');
+}); 
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
 
-
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
-});
-
+export default app; // Export the app for testing purposes
