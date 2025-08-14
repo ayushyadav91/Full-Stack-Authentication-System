@@ -14,7 +14,7 @@ username: User.username,
         expiresIn: '1h' // Token expiration time
     });
 }       
-
+  
 //Referesh token generation logic
 export const generateRefreshToken = (user) => {
     return jwt.sign({ id: user._id, 
@@ -23,4 +23,4 @@ username: User.username,
   process.env.JWT_SECRET_REFRESH_TOKEN, {  
         expiresIn: '7d' // Token expiration time
 });
-}   
+}  
