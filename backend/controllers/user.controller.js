@@ -1,6 +1,9 @@
 import User from '../models/user.model.js'; // Adjust the path as necessary
 import jwt from 'jsonwebtoken';
 
+import dotenv from 'dotenv';
+dotenv.config(); // Load environment variables from .env file
+
 
 // Method to generate JWT token (assuming you have a method to generate tokens)
 // Access token generation logic
@@ -24,18 +27,23 @@ username: User.username,
 }  
 
 const getUser = async (req, res) => {
-    // try {
-    //     // Assuming you have a User model and you're using Mongoose
-    //     const user = await User.findById(req.user.id     ); // req.user.id should be set by your authentication middleware          
-    //     if (!user) {
-    //         return res.status(404).json({ message: 'User not found' });
-    //     }                   
-    //     res.status(200).json(user);
-    // } catch (error) {
-    //     console.error('Error fetching user:', error);
-    //     res.status(500).json({ message: 'Server error' });
-    // }
-    res.status(200).json({ name: 'John Doe', email: "ayush434@gamil.com", role: 'user' , gender:"male", age: 25, address: '123 Main St' });           
+    try {
+        // Assuming you have a user ID in the request (e.g., from a token)
+        const userId = req.user.id; // Adjust based on your authentication middleware
+        const user = await User.findById(userId);   
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }   
+        res.status(200).json({
+            id: user._id,
+            username: user.username,
+        }
+        );
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+
 };      
 
 const registerUser = async (req, res) => {
@@ -91,6 +99,7 @@ const loginUser = async (req, res) => {
         res.status(200).json({
             accessToken,
             refreshToken,
+        
             user: { id: user._id, username: user.username, email: user.email },
             message: 'User logged in successfully'
         });
