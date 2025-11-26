@@ -16,12 +16,15 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
-    "express-validator": "^7.2.1",
     "jest": "^30.0.5",
     "jsonwebtoken": "^9.0.2",
     "logger": "^0.0.1",
+    "mongo-sanitize": "^1.1.0",
     "mongoose": "^8.17.1",
+    "nodemailer": "^7.0.10",
+    "redis": "^5.10.0",
     "supertest": "^7.1.4",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "zod": "^4.1.13"
   }
 }

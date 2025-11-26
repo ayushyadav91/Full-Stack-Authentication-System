@@ -9,38 +9,46 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    match: /^[a-zA-Z0-9_]+$/,
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+ email: { type: String, unique: true },
     password: { 
     type: String,
     required: true,
   },
-  refershToken: {
+  role:{  
     type: String,
-  },
-  otp:{
-    type: String,
-    max: 6,
-  },
-  email_verified: {
-    type: Boolean,
-    default: false,
-  },
-});
+    "default": "user",
+    enum: ["admin", "user"],
+    default: "user"
+  },  
+  // isEmailVerified: {
+  //   type: Boolean,
+  //   default: false,
+  // },
+  // emailVerificationToken: {
+  //   type: String,
+  // },
+  // emailVerificationExpires: {
+  //   type: Date,
+  // },
+  
+
+
+ 
+}, { timestamps: true });
 
 // Hash password before saving
 userSchema.pre('save', async function (next) {
-  if (this.isModified('password')) {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-  } 
-    next();
+  if (!this.isModified('password')) {
+    return next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
 });
+
+
+
 // Method to compare passwords
 userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
